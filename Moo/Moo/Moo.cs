@@ -41,7 +41,7 @@ namespace Moo
                 while (true)
                 {                   
                     Console.Write("Играч:");
-                    string input = Console.ReadLine();
+                    string input = Console.ReadLine().Trim();
 
                     if (input == "exit")
                     {
@@ -111,19 +111,19 @@ namespace Moo
                         }
 
                         //Проверяваме дали числото не е по-голямо или по-малко от избраната, от играча, дължина в началото на играта
-                        if (input.Trim().Length > numberOfDigits)
+                        if (input.Length > numberOfDigits)
                         {
                             ErrorMessage(String.Format("Въведеното от вас число има повече от {0} цифри!",numberOfDigits));
                             continue;
                         }
-                        else if (input.Trim().Length < numberOfDigits)
+                        else if (input.Length < numberOfDigits)
                         {
                             ErrorMessage(String.Format("Въведеното от вас число има по-малко от {0} цифри!", numberOfDigits));
                             continue;
                         }
 
                         //Правим проверка и за повтарящи се цифри
-                        if (HasEqualCharacters(input.Trim()))
+                        if (HasEqualCharacters(input))
                         {
                             ErrorMessage("Числото не трябва да съдържа повтарящи се цифри!");
                             continue;
