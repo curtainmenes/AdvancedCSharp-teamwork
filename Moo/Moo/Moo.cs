@@ -8,12 +8,13 @@ namespace Moo
     class Moo
     {
         public static byte numberOfDigits;
+        public static List<string> log = new List<string>();
         
         static void Main(string[] args)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Gray;
-            
+          
             while (true)
             {
                 Console.Write("Колко цифри да съдържа числото, измислено от компютъра? ");
@@ -27,9 +28,9 @@ namespace Moo
                     ErrorMessage("\nБроят на цифрите не може да бъде по-малък от 3!");
                     continue;
                 }
-                else if (numberOfDigits>10)
+                else if (numberOfDigits>9)
                 {
-                    ErrorMessage("\nБроят на цифрите не може да бъде по-голям от 10!");
+                    ErrorMessage("\nБроят на цифрите не може да бъде по-голям от 9!");
                     continue;
                 }
 
@@ -70,6 +71,7 @@ namespace Moo
                         if (Surrender(computersNumber))
                         {
                             Console.Clear();
+                            log.Clear();
                             break;
                         }
                     }
@@ -87,6 +89,7 @@ namespace Moo
                         if (Console.ReadKey().Key == ConsoleKey.Y)
                         {
                             Console.Clear();
+                            log.Clear();
                             break;
                         }
                         Console.WriteLine();
@@ -129,24 +132,34 @@ namespace Moo
                             continue;
                         }
 
+                        //Проверяваме дали първата цифра не е нула
+                        if (input[0] == '0')
+                        {
+                            ErrorMessage("Първата цифра на числото не може да е нула. Моля, прочетете правилата на играта, като напишете командата \"rules\".");
+                            continue;
+                        }
+
                         // Вземаме броя на биковете и броя на кравите, и ги отпечатваме на конзолата
                         byte[] bullsAndCows = GetBullsAndCows(computersNumber,gamersNumber);
                         if (bullsAndCows[0]==numberOfDigits) // Ако биковете са равни на цифрите, играча печели играта
                         {
                             Console.Beep();
                             ComputerMessage(String.Format("Вие разкрихте тайното ми число с {0} опита. :)",++countTries));
+                            log.Add(String.Format("{0,-4} {1,-13} {2,-6} {3,-5}", countTries+".", input, bullsAndCows[0], bullsAndCows[1]));
                             Console.Write("Искате ли да започнете нова игра?(Y|n):");
                             if (Console.ReadKey().Key == ConsoleKey.N)
                             {
                                 return;
                             }
                             Console.Clear();
+                            log.Clear();
                             break;
                         }
                         else
                         {
                             countTries++;
                             ComputerMessage(String.Format("Имате {0} бика и {1} крави",bullsAndCows[0],bullsAndCows[1]));
+                            log.Add(String.Format("{0,-4} {1,-13} {2,-6} {3,-5}", countTries + ".", input, bullsAndCows[0], bullsAndCows[1]));
                             continue;
                         }
                     }
@@ -210,7 +223,15 @@ namespace Moo
 
         static void Log()
         {
-
+            if (log.Count == 0)
+            {
+                ErrorMessage("Списъкът е празен.");
+            }
+            else
+            {
+                Console.WriteLine("\n{0,4} {1,13} {2,-6} {3,-5}\n", "Опит", "Предположение", "Бикове", "Крави");
+                Console.WriteLine(string.Join("\n", log));
+            }
         }
 
         static void Help()
