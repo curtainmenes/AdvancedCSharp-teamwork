@@ -2,33 +2,37 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace Moo
 {
     class Moo
     {
+
         public static byte numberOfDigits;
         public static List<string> log = new List<string>();
-        
+
         static void Main(string[] args)
         {
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             Console.BackgroundColor = ConsoleColor.Black;
             Console.ForegroundColor = ConsoleColor.Gray;
-          
+
             while (true)
             {
-                Console.Write("Колко цифри да съдържа числото, измислено от компютъра? ");
-                if(!byte.TryParse(Console.ReadLine(), out numberOfDigits))
+                Console.WriteLine("Хайде да играем на Мууу :-)");
+                Console.WriteLine("Колко цифри да съдържа числото, измислено от компютъра? ");
+                if (!byte.TryParse(Console.ReadLine(), out numberOfDigits))
                 {
                     ErrorMessage("\nВъвели сте грешни данни!");
                     continue;
                 }
-                if (numberOfDigits<3)
+                if (numberOfDigits < 3)
                 {
                     ErrorMessage("\nБроят на цифрите не може да бъде по-малък от 3!");
                     continue;
                 }
-                else if (numberOfDigits>9)
+                else if (numberOfDigits > 9)
                 {
                     ErrorMessage("\nБроят на цифрите не може да бъде по-голям от 9!");
                     continue;
@@ -38,9 +42,9 @@ namespace Moo
                 uint countTries = 0; // Брои опитите на играча да познае числото
                 byte jokersCounter = 0; // Брои жокерите
 
-                ComputerMessage(String.Format("Намислих си едно {0}-цифрено число 3:-O", numberOfDigits));
+                ComputerMessage(String.Format("Намислих си едно {0}-цифрено число :-O", numberOfDigits));
                 while (true)
-                {                   
+                {
                     Console.Write("Играч:");
                     string input = Console.ReadLine().Trim();
 
@@ -53,11 +57,11 @@ namespace Moo
                         Help();
                         continue;
                     }
-                    else if(input == "rules")
+                    else if (input == "rules")
                     {
                         Rules();
                         continue;
-                    } 
+                    }
                     else if (input == "clear")
                     {
                         Console.Clear();
@@ -66,7 +70,7 @@ namespace Moo
                     {
                         Log();
                     }
-                    else if (input=="surrender")
+                    else if (input == "surrender")
                     {
                         if (Surrender(computersNumber))
                         {
@@ -75,14 +79,14 @@ namespace Moo
                             break;
                         }
                     }
-                    else if (input=="joker")
+                    else if (input == "joker")
                     {
                         if (!Joker(computersNumber, ++jokersCounter))
                         {
                             continue;
                         }
                     }
-                    else if (input=="newgame")
+                    else if (input == "newgame")
                     {
 
                         Console.Write("Сигурни ли сте, че искате да започнете нова игра?(y|N):");
@@ -103,20 +107,20 @@ namespace Moo
                          * Ако играча не е въвел число или пък числото,което е въвел, не се побира в типа uint - връщаме му съобщение за грешка.
                          */
                         uint gamersNumber = 0;
-                        if (!uint.TryParse(input,out gamersNumber))
+                        if (!uint.TryParse(input, out gamersNumber))
                         {
                             if (String.IsNullOrEmpty(input) || String.IsNullOrWhiteSpace(input))
                             {
                                 continue;
                             }
-                            ErrorMessage(String.Format("\n\"{0}\" не е валидно число! Трябва да въведете {1}-цифрено положително число.",input,numberOfDigits));
+                            ErrorMessage(String.Format("\n\"{0}\" не е валидно число! Трябва да въведете {1}-цифрено положително число.", input, numberOfDigits));
                             continue;
                         }
 
                         //Проверяваме дали числото не е по-голямо или по-малко от избраната, от играча, дължина в началото на играта
                         if (input.Length > numberOfDigits)
                         {
-                            ErrorMessage(String.Format("Въведеното от вас число има повече от {0} цифри!",numberOfDigits));
+                            ErrorMessage(String.Format("Въведеното от вас число има повече от {0} цифри!", numberOfDigits));
                             continue;
                         }
                         else if (input.Length < numberOfDigits)
@@ -140,12 +144,12 @@ namespace Moo
                         }
 
                         // Вземаме броя на биковете и броя на кравите, и ги отпечатваме на конзолата
-                        byte[] bullsAndCows = GetBullsAndCows(computersNumber,gamersNumber);
-                        if (bullsAndCows[0]==numberOfDigits) // Ако биковете са равни на цифрите, играча печели играта
+                        byte[] bullsAndCows = GetBullsAndCows(computersNumber, gamersNumber);
+                        if (bullsAndCows[0] == numberOfDigits) // Ако биковете са равни на цифрите, играча печели играта
                         {
                             Console.Beep();
-                            ComputerMessage(String.Format("Вие разкрихте тайното ми число с {0} опита. :)",++countTries));
-                            log.Add(String.Format("{0,-4} {1,-13} {2,-6} {3,-5}", countTries+".", input, bullsAndCows[0], bullsAndCows[1]));
+                            ComputerMessage(String.Format("Вие разкрихте тайното ми число с {0} опита. :)", ++countTries));
+                            log.Add(String.Format("{0,-4} {1,-13} {2,-6} {3,-5}", countTries + ".", input, bullsAndCows[0], bullsAndCows[1]));
                             Console.Write("Искате ли да започнете нова игра?(Y|n):");
                             if (Console.ReadKey().Key == ConsoleKey.N)
                             {
@@ -158,7 +162,14 @@ namespace Moo
                         else
                         {
                             countTries++;
-                            ComputerMessage(String.Format("Имате {0} бика и {1} крави",bullsAndCows[0],bullsAndCows[1]));
+                            if (bullsAndCows[0] == 1 && bullsAndCows[1] == 1)
+                            {
+                                ComputerMessage(String.Format("Имате {0} бик и {1} кравa", bullsAndCows[0], bullsAndCows[1]));
+                            }
+                            else
+                            {
+                                ComputerMessage(String.Format("Имате {0} бика и {1} крави", bullsAndCows[0], bullsAndCows[1]));
+                            }
                             log.Add(String.Format("{0,-4} {1,-13} {2,-6} {3,-5}", countTries + ".", input, bullsAndCows[0], bullsAndCows[1]));
                             continue;
                         }
@@ -199,17 +210,17 @@ namespace Moo
             return false;
         }
 
-        static bool Joker(uint compNumber,byte numberOfDigitsToReveal)
+        static bool Joker(uint compNumber, byte numberOfDigitsToReveal)
         {
             // Ако исканите за разкриване цифри са твърде много, метода връща false, в противен случай връща true.
             // Това съм го направил с цел, ако метода върне грешката(която се намира под този коментар) да мога да извикам continue във втория цикъл(този който е в Main метода) 
-            if (numberOfDigitsToReveal>=numberOfDigits)
+            if (numberOfDigitsToReveal >= numberOfDigits)
             {
                 ErrorMessage("Нямате право на повече жокери.");
                 return false;
             }
-            string joker = compNumber.ToString().Substring(0,numberOfDigitsToReveal).PadRight(numberOfDigits,'*');
-            if (numberOfDigitsToReveal==1)
+            string joker = compNumber.ToString().Substring(0, numberOfDigitsToReveal).PadRight(numberOfDigits, '*');
+            if (numberOfDigitsToReveal == 1)
             {
                 ComputerMessage("Ех... добре, щом ти е толкова трудно, ще ти разкрия една цифра :)");
             }
@@ -237,17 +248,17 @@ namespace Moo
         static void Help()
         {
             string help = " За да научите повече за правилата на играта, моля въведете \"rules\". \n\n" +
-                          " Ако се затруднявате с разкриването на числото конфигурирано от компютъра, \n"+
+                          " Ако се затруднявате с разкриването на числото конфигурирано от компютъра, \n" +
                           " може да ползвате жокер, като въведете \"joker\". \n\n" +
                           " Ако наистина много се затруднявате с разкриването на числото, въведете \n" +
                           " \"surrender\" и търсеното число ще се изпише. \n\n" +
-                          " Ако екрана ви се струва препълнен, може да използвате командата \"clear\",\n"+
-                          " която ще изчисти вашите предположения и всички съобщения от компютъра.\n"+
-                          " След като изчистите екрана може да използвате командата \"log\", за да \n"+
-                          " получите списък с досегашните ви предположения и резултатът от тях.\n\n"+
-                          " Ако искате да започнете нова игра, напишете \"newgame\". \n\n"+
+                          " Ако екрана ви се струва препълнен, може да използвате командата \"clear\",\n" +
+                          " която ще изчисти вашите предположения и всички съобщения от компютъра.\n" +
+                          " След като изчистите екрана може да използвате командата \"log\", за да \n" +
+                          " получите списък с досегашните ви предположения и резултатът от тях.\n\n" +
+                          " Ако искате да започнете нова игра, напишете \"newgame\". \n\n" +
                           " За изход от играта въведете \"exit\".\n\n" +
-                          " Примерна стратегия: Aко се играе например с 4-цифрено число може да се \n"+
+                          " Примерна стратегия: Aко се играе например с 4-цифрено число може да се \n" +
                           " започне с първи опит: 1234 и втори опит: 5678.";
             Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(help);
@@ -256,26 +267,26 @@ namespace Moo
 
         static void Rules()
         {
-            string rules = "  Целта на играта е да откриете избраното от противника (компютъра) чи-\n"+
-                           "  сло, с минимален брой въпроси. След всеки въпрос противникът(компютър-\n"+
+            string rules = "  Целта на играта е да откриете избраното от противника (компютъра) чи-\n" +
+                           "  сло, с минимален брой въпроси. След всеки въпрос противникът(компютър-\n" +
                            "  ът) съобщава броя на съвпаденията (брой бикове и брой крави). Всички \n" +
-                           "  цифри на числото са различни. В тази имплементация на играта, цифри-\n"+
+                           "  цифри на числото са различни. В тази имплементация на играта, цифри-\n" +
                            "  те(освен първата цифра) на числото могат да бъдат и нули. Когато за да-\n" +
                            "  дено число бъде позната и неговата позиция, това е \"бик\". Когато даде-\n" +
                            "  но число бъде познато, но не е на правилната позиция, това е \"крава\". \n\n" +
                            "  Например: \n  Числото генерирано от компютъра е 3568, а предположението на играча е 3679.\n" +
                            "  Резултатът е: 1 бик(числото 3, което е на вярната си позиция)\n" +
-                           "  и 1 крава (числото 6, което е познато, но е на грешна позиция).";            
+                           "  и 1 крава (числото 6, което е познато, но е на грешна позиция).";
             Console.ForegroundColor = ConsoleColor.Cyan;
             Console.WriteLine(rules);
-            Console.ForegroundColor = ConsoleColor.Gray;            
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
-        
+
         static byte[] GetBullsAndCows(uint compNumber, uint gamersNumber) // Връща броя на биковете и кравите
         {
             byte[] computersNumberDigits = ExtractDigits(compNumber);
             byte[] gamersNumberDigits = ExtractDigits(gamersNumber);
-            byte[] numberBullsAndCows = {0,0}; // На индекс 0 е броят на биковете
+            byte[] numberBullsAndCows = { 0, 0 }; // На индекс 0 е броят на биковете
 
             for (int i = 0; i < numberOfDigits; i++)
             {
@@ -287,24 +298,24 @@ namespace Moo
                 {
                     for (int j = 0; j < numberOfDigits; j++)
                     {
-                        if (gamersNumberDigits[i]==computersNumberDigits[j])
+                        if (gamersNumberDigits[i] == computersNumberDigits[j])
                         {
                             numberBullsAndCows[1]++;
                         }
                     }
                 }
             }
-            
+
             return numberBullsAndCows;
         }
 
         static bool HasEqualCharacters(string gamersInput)
-        {            
+        {
             for (int i = 0; i < gamersInput.Length; i++)
             {
                 for (int j = 0; j < gamersInput.Length; j++)
                 {
-                    if (gamersInput[i].Equals(gamersInput[j]) && j!=i)
+                    if (gamersInput[i].Equals(gamersInput[j]) && j != i)
                     {
                         return true;
                     }
@@ -339,15 +350,15 @@ namespace Moo
         static void ComputerMessage(string msg)
         {
             Console.ForegroundColor = ConsoleColor.Yellow;
-            Console.WriteLine("Компютър: {0}",msg);
+            Console.WriteLine("Компютър: {0}", msg);
             Console.ForegroundColor = ConsoleColor.Gray;
         }
-        
+
         static void ErrorMessage(string msg)
         {
             Console.ForegroundColor = ConsoleColor.Red;
             Console.WriteLine(msg);
-            Console.ForegroundColor = ConsoleColor.Gray;            
+            Console.ForegroundColor = ConsoleColor.Gray;
         }
     }
 }
